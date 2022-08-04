@@ -14,10 +14,10 @@ mongoose.connection.once('open', () => {
 
 //middleware
 app.use(express.urlencoded({extended: false}))
-app.use((req, res, next) => {
-    console.log(`I run for all routes`);
-    next();
- });
+// app.use((req, res, next) => {
+//     console.log(`I run for all routes`);
+//     next();
+//  });
 
 
 //setting up our views
