@@ -5,7 +5,9 @@ const Pokemon = require('./models/pokemon.js')
 const app = express()
 const port = process.env.PORT || 3003
 const methodOverride = require('method-override')//method override for delete
+const pokemonData = require('./utilities/pokemonData')
 
+//DB connection
 mongoose.connect(process.env.MONGO_URI);
 
 mongoose.connection.once('open', () => {
@@ -25,8 +27,12 @@ app.use((req, res, next) => {
 //seed route
 app.get('/pokemon/seed', (req, res) => {
     //Comment the line if you don't want to delete your whole entire collection
-    Pokemon
+    // Pokemon.deleteMany({}) -> not working for right now
+    //Crete a list of pokemon into our database
+    Pokemon.create(pokemonData)
 })
+
+
 
 //setting up our views
 app.set('view engine', 'jsx')
