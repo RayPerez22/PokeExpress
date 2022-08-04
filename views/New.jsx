@@ -3,6 +3,7 @@ const React = require('react')
 class New extends React.Component {
   render() {
     return (
+      <html>
         <div>
             <h1>New Pokemon Page</h1>
             {/* NOTE: action will be the route, method will be the HTTP verb */}
@@ -11,7 +12,9 @@ class New extends React.Component {
               <input type="submit" name="" value="Add Pokemon"/>
             </form>
             <a href="/pokemon">Back</a>
-        </div>)
+        </div>
+      </html>
+      )
     }
   }
 

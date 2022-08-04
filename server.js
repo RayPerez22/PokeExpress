@@ -4,7 +4,7 @@ require('dotenv').config()
 const Pokemon = require('./models/pokemon.js')
 const app = express()
 const port = process.env.PORT || 3003
-
+const methodOverride = require('method-override')//method override for delete
 
 mongoose.connect(process.env.MONGO_URI);
 
@@ -14,11 +14,19 @@ mongoose.connection.once('open', () => {
 
 //middleware
 app.use(express.urlencoded({extended: false}))
-// app.use((req, res, next) => {
-//     console.log(`I run for all routes`);
-//     next();
-//  });
 
+app.use(methodOverride('_method'))
+
+app.use((req, res, next) => {
+    console.log(`I run for all routes`);
+    next();
+ });
+
+//seed route
+app.get('/pokemon/seed', (req, res) => {
+    //Comment the line if you don't want to delete your whole entire collection
+    Pokemon
+})
 
 //setting up our views
 app.set('view engine', 'jsx')
@@ -29,7 +37,7 @@ app.get('/',(req, res) =>{
     res.send('Welcome to the Pokemon App!')
 })
 
-app.get('/pokemon/',(req, res) =>{
+app.get('/pokemon/', (req, res) =>{
     Pokemon.find({}, (error, allPokemon)=>{
            // res.render('pokemon')
            res.render('Index', { 
@@ -52,7 +60,7 @@ app.get('/pokemon/new', (req, res) => {
 
 
 //show
-app.get('/pokemon/:id',(req, res) => {
+app.get('/pokemon/:id', (req, res) => {
     console.log(req.params.id)
     Pokemon.findById(req.params.id, (err, foundPokemon)=>{
         res.render('Show', {
@@ -61,7 +69,42 @@ app.get('/pokemon/:id',(req, res) => {
     })
 })
 
+//delete route
+app.delete('/pokemon/:id', (req,res) => {
+    console.log('we are deleting')
+    Pokemon.findByIdAndRemove(req.params.id, (err, data) => {
+        res.redirect('/pokemon')
+    })
+})
+// altenative way
+// app.delete('/pokemon/:id',(req,res) => {
+//     Pokemon.findByIdAndRemove(req.params.id)
+//         res.redirect('/pokemon')    
+// })
 
+app.get('/pokemon/:id/edit', (req, res) => {
+    Pokemon.findById(req.params.id, (error, foundPokemon) => {
+        if(!error) {
+            res.render('Edit', {
+                pokemon: foundPokemon
+            })
+        }else {
+            res.send({
+                message: error.message
+            })
+        }
+    })
+})
+
+
+// Edit:Update route
+app.put('/pokemon/:id', (req, res) => {
+    Pokemon.findByIdAndUpdate(req.params.id, req.body, {
+        new: true
+    }, (error, pokemon) => {
+        res.redirect(`/pokemon/${req.params.id}`)
+    })
+})
 
 
 app.listen(port, () => {
