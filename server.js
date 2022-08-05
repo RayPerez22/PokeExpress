@@ -30,6 +30,7 @@ app.get('/pokemon/seed', (req, res) => {
     // Pokemon.deleteMany({}) -> not working for right now
     //Crete a list of pokemon into our database
     Pokemon.create(pokemonData)
+    res.redirect('/pokemon')
 })
 
 
