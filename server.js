@@ -54,6 +54,7 @@ app.get('/pokemon/', (req, res) =>{
 })
 
 app.post('/pokemon/', (req, res)=>{
+    console.log('creating pokemon')
     Pokemon.create(req.body, (error, createdPokemon)=>{
         // res.send(createdPokemon)
         res.redirect('/pokemon')
